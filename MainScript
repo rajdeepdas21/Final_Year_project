@@ -1,0 +1,21 @@
+%% MainScript
+% Load data and initialize the NN parameters
+clc; clear;
+
+% Load input data and target data from file
+inputFile = 'Active Power Load _33_11KV_Godishala Substation.xlsx';
+sheetName = 'Sheet1';  % Assuming sheet1 has your input data
+
+% Import data from Excel
+[inputData, targetData] = loadDataFromExcel(inputFile, sheetName);
+
+% NN parameters
+hiddenLayerSize = 10;     % Set your desired number of neurons in the hidden layer
+trainFcn = 'trainlm';     % Training function (can be 'trainlm', 'trainbr', 'trainscg')
+inputDelays = 0:24;       % Time delay in hours
+
+% Train the NN with Levenberg-Marquardt ('trainlm')
+[netLM, trLM, performanceLM, outputsLM, errorsLM] = trainNN(inputData, targetData, hiddenLayerSize, trainFcn, inputDelays);
+
+% Plot the results (Actual, Predicted, and Errors)
+plotResults(targetData, outputsLM, errorsLM);
