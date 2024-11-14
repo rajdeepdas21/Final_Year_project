@@ -1,0 +1,22 @@
+function [inputData, targetData] = loadDataFromExcel(filename, sheetName)
+    % loadDataFromExcel - Reads and prepares data from Excel file for neural network
+    %
+    % Inputs:
+    %   filename  - String, name of the Excel file containing the data
+    %   sheetName - String, name of the sheet containing the data
+    %
+    % Outputs:
+    %   inputData  - Cell array of input data in time-series format
+    %   targetData - Cell array of target data in time-series format
+    
+    % Read the data from the specified Excel file and sheet
+    [numbers, ~] = xlsread(filename, sheetName);
+    
+    % Assuming the first column is input and the second is target
+    inputData = numbers(:,end);  % Adjust based on your data structure
+    targetData = numbers(:,end); % Adjust based on your data structure
+    
+    % Convert to time-series format
+    inputData = tonndata(inputData, false, false);
+    targetData = tonndata(targetData, false, false);
+end
