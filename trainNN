@@ -1,0 +1,48 @@
+function [net, tr, performance, outputs, errors] = trainNN(inputData, targetData, hiddenLayerSize, trainFcn, inputDelays)
+    % trainNN - Creates and trains a Time Delay Neural Network
+    %
+    % Inputs:
+    %   inputData      - Cell array of input data in time-series format
+    %   targetData     - Cell array of target data in time-series format
+    %   hiddenLayerSize- Integer, number of neurons in hidden layer
+    %   trainFcn      - String, training function to use
+    %   inputDelays   - Vector, specifying the input delays to use
+    %
+    % Outputs:
+    %   net        - Trained neural network object
+    %   tr         - Training record
+    %   performance- Network performance value
+    %   outputs    - Network outputs
+    %   errors     - Network prediction errors
+
+    % Prepare the input and target series
+    inputSeries = inputData;
+    targetSeries = targetData;
+
+    % Create a Time Delay Neural Network
+    net = timedelaynet(inputDelays, hiddenLayerSize);
+    
+    % Prepare the input for training
+    [inputs, inputStates, layerStates, targets] = preparets(net, inputSeries, targetSeries);
+    
+    % Set up the division of data for training, validation, and testing
+    net.divideParam.trainRatio = 70/100;
+    net.divideParam.valRatio = 15/100;
+    net.divideParam.testRatio = 15/100;
+    
+    % Set the training function
+    net.trainFcn = trainFcn;
+    
+    % Train the network
+    [net, tr] = train(net, inputs, targets, inputStates, layerStates);
+    
+    % Get the outputs and errors
+    outputs = net(inputs, inputStates, layerStates);
+    errors = gsubtract(targets, outputs);
+    
+    % Calculate the performance
+    performance = perform(net, targets, outputs);
+    
+    % Display performance
+    fprintf('Performance: %f\n', performance);
+end
