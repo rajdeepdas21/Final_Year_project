@@ -1,0 +1,35 @@
+function plotResults(targetData, outputs, errors)
+    % plotResults - Creates visualization plots for neural network results
+    %
+    % Inputs:
+    %   targetData - Cell array of actual target values
+    %   outputs    - Cell array of network predictions
+    %   errors     - Cell array of prediction errors
+    
+    % Plot 1: Actual Load Consumption
+    figure;
+    plot(1:length(targetData), cell2mat(targetData), 'b');
+    xlabel('Time Intervals (Hr)');
+    ylabel('Load Consumption (kW)');
+    title('Actual value of power consumption from 1/1/2010 to 6/30/2010');
+    grid on;
+
+    % Plot 2: Predicted vs Actual Data
+    figure;
+    hold on;
+    plot(1:length(targetData), cell2mat(targetData), 'b', 'DisplayName', 'Actual');
+    plot(1:length(outputs), cell2mat(outputs), 'r--', 'DisplayName', 'Predicted');
+    xlabel('Time Intervals (Hr)');
+    ylabel('Power Consumption (kW)');
+    title('Predicted vs Actual Power Consumption');
+    legend show;
+    grid on;
+
+    % Plot 3: Error/Residual Plot
+    figure;
+    plot(1:length(errors), cell2mat(errors), 'k');
+    xlabel('Time Intervals (Hr)');
+    ylabel('Prediction Error (kW)');
+    title('Error between Actual and Predicted Power Consumption');
+    grid on;
+end
